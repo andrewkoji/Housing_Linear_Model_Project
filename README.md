@@ -12,18 +12,6 @@ Please fill out:
 ## Business Problem:
 # Stakeholder: Real Estate Agency - Zillow
 
-
-```python
-pwd
-```
-
-
-
-
-    'C:\\Users\\alevi\\Documents\\Flatiron\\dsc-data-science-env-config\\Course_Folder\\Phase_2\\Housing_Linear_Model_Project'
-
-
-
 ![Zillow_logo19.png](./images/zillow.png)
 
 # Problem: 
@@ -167,6 +155,9 @@ It appears at first glance that the data only yields a small set of independent 
 ![image.png](./images/scatterplots.png)
 
 # Model #1 - numerical predictors only, some categorical
+![image-2.png](./images/model1.png)
+
+
 Predictors:
 - `bedrooms`
 - `bathrooms`
@@ -189,25 +180,24 @@ Target variable:
 ## Observations
 p_value > 0.05
 
-- `sqft_lot`
+
 - `month`
-- `cond_Fair`
-- `cond_Poor`
+- `long`
 
 
 ** look at again after adjusting for outliers
 
 
  - All variables with a p_value > 0.05 are deemed statistically insignificant and will eventually be dropped from the final model.
- - With half the condition data(`cond_Fair`, `cond_Poor`) being insignificant in the model, it makes sense to drop the condition data completely. 
+
  - Month was not anticipated as an effective predictor because it is not typical for the season to affect the sale price of a house.
+ 
+ - longitude will continue to be looked at but appears insignificant to the model now
  
  
 Additional Observations:
  - The adjusted r-squared value is .514, indicating that his model can explain approximately 51.4% of the data.
- -  Skew: A kurtosis value between -2 and +2 is good to prove normalcy. The kurtosis value is 10.060, indicating that this model is heavily skewed. This will be addressed through transformations to normalize the data. 
-
-![image-2.png](./images/model1.png)
+ -  Skew: A kurtosis value between -2 and +2 is good to prove normalcy. The skew value is 10.060, indicating that this model is heavily skewed. This will be addressed through transformations to normalize the data. 
 
 ![image.png](./images/model1residhist.png)
 
@@ -242,6 +232,12 @@ The address appears to be the most interesting variable in the batch because it 
 Waterfont, greenbelt, nuisance, view, sewer(onehotencoded), and heat source(onehotencoded) are added to the model to see its effects.
 
 ## Model #2
+
+### Changes to create model 2
+
+- Additon of categorical variables: 
+- `waterfront, view, greenbelt`: changed to booleans or scaled as 1-4 depending on number of options
+- `sewer, heatsource`: one hot encoded to be added as numerical variable
 
 ![image-2.png](./images/model2.png)
 
@@ -392,11 +388,10 @@ Jarque-Beras score is significantly better as well with the y_sqrt variable so I
 
 ## Model ran one more time - after dropping bedrooms, and all onehotencoded variables with pval > 0,05
 
-![image-4.png](attachment:image-4.png)
+![image-4.png](./images/modelonemore.png)
 
 ### Residual distribution
-![image-5.png](attachment:image-5.png)
-
+![image-5.png](./images/residonemore.png)
 
 
 ## Observations
@@ -441,7 +436,7 @@ Next steps to improve the model:
 ![image-2.png](./images/finalresid.png)
 
 ### Final Check on VIFs for multicollinearity
-![image-3.png](./images/finalVIFs.png)
+![image-3.png](./images/FinalVIFs.png)
 
 - All VIFs are under 10 with the majority under 3, addressing the issue of multicollinearity. The statsmodel also does not label any concerns on multicollinearity.
 
@@ -588,7 +583,7 @@ Variance Inflation Factors (VIFs) are a measure used to assess the degree of mul
 
 ## Recommendations
 
-For the purposes of Zillows ability to choose inventory in the King County Real Estate Market, I recommend looking at properties that are near Lake Sammish or that are further north that also is accompanied with a waterfront. Since the grade, condition, and number of bathrooms appear positively correlated to the price it would make sense to try and buy older homes in the aformentioned areas as older homes tend to be cheaper in terms of price. Taking these homes and ensuring the grade and condition are of high quality through either pre-assessed purchases or renovations, along with possibly adding bathrooms can raise the price for resell value. 
+For the purposes of Zillows ability to choose inventory in the King County Real Estate Market, I recommend looking at properties that are near Lake Sammish or that are further north that also is accompanied with a waterfront. Since the grade, condition, and number of bathrooms appear positively correlated to the price it would make sense to try and buy older homes in the aforementioned areas as older homes tend to be cheaper in terms of price. Taking these homes and ensuring the grade and condition are of high quality through either pre-assessed purchases or renovations, along with possibly adding bathrooms can raise the price for resell value. 
 
 Houses towards the west as well as ones that present nuisances clearly result in lower prices, so my recommendation would be to avoid buying houses that fit these parameters as it may result in "holding the bag" scenarios which could lead to longer times held with inventory. 
 
