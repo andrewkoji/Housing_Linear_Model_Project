@@ -12,7 +12,19 @@ Please fill out:
 ## Business Problem:
 # Stakeholder: Real Estate Agency - Zillow
 
-![Zillow_logo19.png](attachment:Zillow_logo19.png)
+
+```python
+pwd
+```
+
+
+
+
+    'C:\\Users\\alevi\\Documents\\Flatiron\\dsc-data-science-env-config\\Course_Folder\\Phase_2\\Housing_Linear_Model_Project'
+
+
+
+![Zillow_logo19.png](./images/zillow.png)
 
 # Problem: 
 Business problem - Provide advice to homeowners about how home renovations might increase the estimated value of their homes, and by what amount.
@@ -152,7 +164,7 @@ The list of variance inflation factors are calculated for each numerical value b
 
 It appears at first glance that the data only yields a small set of independent variables that are not highly collinear with eachother. This will be looked at again after the removal of outliers, and the transformation of data.
 
-![image.png](attachment:image.png)
+![image.png](./images/scatterplots.png)
 
 # Model #1 - numerical predictors only, some categorical
 Predictors:
@@ -195,9 +207,9 @@ Additional Observations:
  - The adjusted r-squared value is .514, indicating that his model can explain approximately 51.4% of the data.
  -  Skew: A kurtosis value between -2 and +2 is good to prove normalcy. The kurtosis value is 10.060, indicating that this model is heavily skewed. This will be addressed through transformations to normalize the data. 
 
-![image-2.png](attachment:image-2.png)
+![image-2.png](./images/model1.png)
 
-![image.png](attachment:image.png)
+![image.png](./images/model1residhist.png)
 
 ## Possible Improvements to be made to model:
 - dropping of variables that are not statistically significant (Pval > 0.05)
@@ -231,7 +243,7 @@ Waterfont, greenbelt, nuisance, view, sewer(onehotencoded), and heat source(oneh
 
 ## Model #2
 
-![image-2.png](attachment:image-2.png)
+![image-2.png](./images/model2.png)
 
 ## Observations of Model 2
 Predictors:
@@ -287,9 +299,9 @@ Next steps are to improve numerical variables by:
 
 ## Model #3 - Ran after outliers are removed
 
-![image.png](attachment:image.png)
+![image.png](./images/model3ranafteroutliersremoved.png)
 
-![image.png](attachment:image.png)
+![image.png](./images/model3residafteroutliersremoved.png)
 
 #### Predictors
 
@@ -345,24 +357,23 @@ pvalue > 0.05
 # Looking at transformations for the target variable aka price.
 
 ## Histogram and QQplot of the target variable
-![image.png](attachment:image.png)
+![image.png](./images/histQQprice.png)
 
 ### Issue above is the data shows linearization everywhere but both tails of the data. Catching the lower tail will be the goal for the test of transformation. For this, we will try a root transformation. 
 
 
 ## Histogram and QQplot of the transformed target variable
-![image-2.png](attachment:image-2.png)
+![image-2.png](./images/histqqsqrtprice.png)
 
 
 
-![image-3.png](attachment:image-3.png)
+![image-3.png](./images/TVthroughiterations.png)
 
 ### Checking model with transformed target variable - square root transformation
-![image.png](attachment:image.png)
+![image.png](./images/model3withsqrtprice.png)
 
 
-![image-2.png](attachment:image-2.png)
-
+![image-2.png](./images/model3residsqrtprice.png)
 
 ## y_log vs y_sqrt
 
@@ -374,10 +385,10 @@ Jarque-Beras score is significantly better as well with the y_sqrt variable so I
 
 
 ### Looking at sqft_living
-![image.png](attachment:image.png)
+![image.png](./images/sqftliving.png)
 
 ### Log transformed sqft_living (sqft_living_log)
-![image-2.png](attachment:image-2.png)
+![image-2.png](./images/sqftliving_log.png)
 
 ## Model ran one more time - after dropping bedrooms, and all onehotencoded variables with pval > 0,05
 
@@ -411,38 +422,34 @@ Next steps to improve the model:
 
 ## Rerunning model after scaling
 
-![image.png](attachment:image.png)
+![image.png](./images/modelnobedrooms.png)
 
 ### Residual Distribution Plot 
-![image-2.png](attachment:image-2.png)
-
+![image.png](./images/residualnobedrooms.png)
 
 #### Checking VIFs
-![image-3.png](attachment:image-3.png)
-
-
+![image-3.png](./images/VIFcheck1.png)
 - VIFs for many variables are still elevated and need to be dropped from model if that remains in the final model. 
 
 ## Final model
 
 #### Model is ran after adding the waterfront data (one hot encoded) as well as dropping any additional variables that are of a pvalue > 0.05
 
-![image.png](attachment:image.png)
-
+![image.png](./images/finalmodel.png)
 ### Residual Distribution Plot 
-![image-2.png](attachment:image-2.png)
 
+![image-2.png](./images/finalresid.png)
 
 ### Final Check on VIFs for multicollinearity
-
-![image-3.png](attachment:image-3.png)
+![image-3.png](./images/finalVIFs.png)
 
 - All VIFs are under 10 with the majority under 3, addressing the issue of multicollinearity. The statsmodel also does not label any concerns on multicollinearity.
 
 ### QQplots of all variables
 
 As shown below, the QQplots of all the variables satisfies linearity which is one of the required assumptions for the model, with some issues at the upper and lower tail for some. 
-![image.png](attachment:image.png)
+
+![image.png](./images/finalqqplots.png)
 
 ### Interpretation
 
