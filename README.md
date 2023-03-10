@@ -37,6 +37,7 @@ Based on correlation coefficient:
 - `sqft_patio`- Square footage of outdoor porch or deck space
 - `bedrooms` - Number of bedrooms
 -`sqft_garage`- Square footage of garage space
+- `school_rating` - Engineered based on data scraped from the GreatSchools API
 
 Other numerical variables:
 - `sqft_lot` - Square footage of the lot
@@ -88,6 +89,26 @@ Assumption check:
     - `statsmodel p-values to test if the feature is statistically significant`
 - Try transforming the data via linear, logarithmic or polynomial transformation to see how shape of data changes. 
 
+## Observing correlation matrix for possible features that can be used with the price
+![image-2.png](./images/Correlations.png)
+
+![image-2.png](./images/corrheatmap.png)
+
+## Interesting Correlations
+
+At first glance, it appears that the following variables are the "most interesting" variables to look at:
+- `sqft_living`
+- `sqft_above`
+- `bathrooms`
+- `sqft_patio`
+- `lat`
+- `bedrooms`
+- `school rating`
+- `sqft_basement`
+- `floors`
+
+The correlations may not be the best metric for picking features because there could be a case of statistical insignificance or skewed data (data is not normally distributed). For further investigation, we will also look at the variance inflation factor (VIF).
+
 ### Variance inflation factor (VIF)
 
 Multicollinearity occurs when there are two or more independent variables in a multiple regression model, which have a high correlation among themselves. When some features are highly correlated, we might have difficulty in distinguishing between their individual effects on the dependent variable. Multicollinearity can be detected using various techniques, one such technique being the Variance Inflation Factor(VIF).
@@ -103,22 +124,25 @@ The list of variance inflation factors are calculated for each numerical value b
 
 #### VIF Data: 
 
-* `price`: 4.32
-* `bedrooms`: 24.61
-* `bathrooms`: 24.74
-* `sqft_living`: 115.26
-* `sqft_lot`: 1.14
-* `floors`: 15.61
-* `sqft_above`: 89.28
-* `sqft_basement`: 6.38
-* `sqft_garage`: 3.84
-* `sqft_patio`: 2.23
-* `yr_built`: 1057.3
-* `yr_renovated`: 1.1
-* `lat`: 2375.3
-* `long`: 1099.66
-* `month`: 699.65
-* `day_of_year`: 614.34
+Variable            VIF
+- `bedrooms`:      24.768622
+- `bathrooms`:     26.263735
+- `sqft_living`:   119.808110
+- `sqft_lot`:      1.140594
+- `floors`:        17.177547
+- `condition`:     31.150197
+- `grade`:         133.035571
+- `sqft_above`:    92.874304
+- `sqft_basement`: 7.075288
+- `sqft_garage`:   4.675596
+- `sqft_patio`:    2.240790
+- `yr_built`:      9263.218882
+- `yr_renovated`:  1.211647
+- `lat`:           136585.268881
+- `long`:          146658.438892
+- `school_rating`: 22.635104
+- `month`:         697.233857
+- `day_of_year`:   612.219197
 
 #### VIF levels:
 
@@ -129,33 +153,33 @@ The list of variance inflation factors are calculated for each numerical value b
 - Throw out: VIF >= 10
 
 #### Good VIFS: 
-- `price`: 4.32
-- `sqft_lot`: 1.14
-- `sqft_garage`: 3.84
-- `sqft_patio`: 2.23
-- `yr_renovated`: 1.1
+- `sqft_lot`: 1.140594
+- `sqft_garage`: 4.675596
+- `sqft_patio`: 2.240790
+- `yr_renovated`: 1.211647
 
 #### Questionable VIFS: 
-- `sqft_basement`: 6.38
+- `sqft_basement`: 7.075288
 
 #### Throw out VIFS: 
-- `bedrooms`: 24.61
-- `bathrooms`: 24.74
-- `sqft_living`: 115.26
-- `floors`: 15.61
-- `sqft_above`: 89.28
-- `yr_built`: 1057.3
-- `lat`: 2375.3
-- `long`: 1099.66
-- `month`: 699.65
-- `day_of_year`: 614.34
+- `bedrooms`: 24.768622
+- `bathrooms`: 26.263735
+- `sqft_living`: 119.808110
+- `floors`: 17.177547
+- `sqft_above`: 92.874304
+- `yr_built`: 9263.218882
+- `lat`: 136585.268881
+- `long`: 146658.438892
+- `month`: 697.233857
+- `day_of_year`: 612.219197
+- `school_rating`: 22.635104
 
 It appears at first glance that the data only yields a small set of independent variables that are not highly collinear with eachother. This will be looked at again after the removal of outliers, and the transformation of data.
 
 ![image.png](./images/scatterplots.png)
 
 # Model #1 - numerical predictors only, some categorical
-![image-2.png](./images/model1.png)
+![image-2.png](./images/OLS_Model_1.png)
 
 
 Predictors:
@@ -172,6 +196,7 @@ Predictors:
 - `sqft_patio`
 - `lat`
 - `long`
+- `school_rating`
 
 Target variable:
 - `price`
@@ -216,7 +241,8 @@ Additional Observations:
 ## Possible categorical variables of interest: 
 
 * `waterfront` - Whether the house is on a waterfront
-  * Includes Duwamish, Elliott Bay, Puget Sound, Lake Union, Ship Canal, Lake Washington, Lake Sammamish, other lake, and river/slough waterfronts
+  * Includes Duwamish, Elliott Bay, Puget Sound, Lake Union,Lake Washington, Lake Sammamish, other lake 
+  Data is engineered by zipcode in this study.
 * `greenbelt` - Whether the house is adjacent to a green belt
 * `nuisance` - Whether the house has traffic noise or other recorded nuisances
 * `view` - Quality of view from house
@@ -239,7 +265,7 @@ Waterfont, greenbelt, nuisance, view, sewer(onehotencoded), and heat source(oneh
 - `waterfront, view, greenbelt`: changed to booleans or scaled as 1-4 depending on number of options
 - `sewer, heatsource`: one hot encoded to be added as numerical variable
 
-![image-2.png](./images/model2.png)
+![image-2.png](./images/OLS_Model_2.png)
 
 ## Observations of Model 2
 Predictors:
@@ -256,6 +282,7 @@ Predictors:
 - 'yr_renovated'
 - 'lat'
 - 'long'
+- 'school_rating
 - 'day_of_year'
 - 'waterfront'
 - 'nuisance',
@@ -264,6 +291,7 @@ Predictors:
 - 'sewer' - one hot encoded
 
 pvalue > 0.05
+- long
 - yr_renovated
 - month
 - sewer_PRIVATE RESTRICTED
@@ -295,7 +323,7 @@ Next steps are to improve numerical variables by:
 
 ## Model #3 - Ran after outliers are removed
 
-![image.png](./images/model3ranafteroutliersremoved.png)
+![image.png](./images/OLS_Model_3.png)
 
 ![image.png](./images/model3residafteroutliersremoved.png)
 
@@ -335,7 +363,6 @@ Next steps are to improve numerical variables by:
 ## Observations of model 3
 pvalue > 0.05
 - `sqft_basement` 
-- `sqft_garage`
 - `sewer_PRIVATE RESTRICTED`
 - `sewer_PUBLIC RESTRICTED`
 - `heat_source_Electricity/Solar`
@@ -344,7 +371,7 @@ pvalue > 0.05
 
 
 
-- Adjusted rsquared indicates that the model explains 62.2% of the data.
+- Adjusted rsquared indicates that the model explains 63.3% of the data.
 - Skewness has improved dramatically to an acceptable range between -2 and 2. The removal of outliers has made this possible.
 - Durbin-Watson score is still in the acceptable ranges of 1.5-2.5
 - Jarque-Bera score is still very high but has been brought down by a significant factor. Still not perfect but trending in the right direction.
@@ -363,10 +390,10 @@ pvalue > 0.05
 
 
 
-![image-3.png](./images/TVthroughiterations.png)
+![image-3.png](./images/TVtransformations.png)
 
 ### Checking model with transformed target variable - square root transformation
-![image.png](./images/model3withsqrtprice.png)
+![image.png](./images/OLS_Model_sqrt.png)
 
 
 ![image-2.png](./images/model3residsqrtprice.png)
@@ -388,7 +415,7 @@ Jarque-Beras score is significantly better as well with the y_sqrt variable so I
 
 ## Model ran one more time - after dropping bedrooms, and all onehotencoded variables with pval > 0,05
 
-![image-4.png](./images/modelonemore.png)
+![image-4.png](./images/OLS_Model_3_after_dropped_variables.png)
 
 ### Residual distribution
 ![image-5.png](./images/residonemore.png)
@@ -417,63 +444,65 @@ Next steps to improve the model:
 
 ## Rerunning model after scaling
 
-![image.png](./images/modelnobedrooms.png)
+![image.png](./images/OLS_Model_Scaled.png)
 
 ### Residual Distribution Plot 
 ![image.png](./images/residualnobedrooms.png)
 
 #### Checking VIFs
-![image-3.png](./images/VIFcheck1.png)
+![image-3.png](./images/scaledVIFs.png)
 - VIFs for many variables are still elevated and need to be dropped from model if that remains in the final model. 
 
 ## Final model
 
 #### Model is ran after adding the waterfront data (one hot encoded) as well as dropping any additional variables that are of a pvalue > 0.05
 
-![image.png](./images/finalmodel.png)
+![image.png](./images/final_model.png)
 ### Residual Distribution Plot 
 
 ![image-2.png](./images/finalresid.png)
 
 ### Final Check on VIFs for multicollinearity
-![image-3.png](./images/FinalVIFs.png)
+![image-3.png](./images/final_vifs.png)
 
-- All VIFs are under 10 with the majority under 3, addressing the issue of multicollinearity. The statsmodel also does not label any concerns on multicollinearity.
+- All VIFs are under 3 but one, addressing the issue of multicollinearity. The statsmodel also does not label any concerns on multicollinearity.
 
 ### QQplots of all variables
 
 As shown below, the QQplots of all the variables satisfies linearity which is one of the required assumptions for the model, with some issues at the upper and lower tail for some. 
 
-![image.png](./images/finalqqplots.png)
+![image.png](./images/final_QQplot.png)
 
 ### Interpretation
 
 We have a linear model with the dependent variable (price) square root transformed, and the following independent variables and their corresponding coefficients:
 
-- Bathrooms: 17.832111
-- Sqft_lot: 10.776486
-- Floors: -5.769272
-- Condition: 23.438047
-- Grade: 69.763857
-- Sqft_above: 63.905587
-- Sqft_basement: 17.451898
-- Sqft_garage: -3.105150
-- Sqft_patio: 7.790561
-- Yr_built: -26.362631
-- Yr_renovated: 6.568336
-- Lat: 100.368386
-- Long: 11.706009
-- Sewer_PUBLIC: 5.427152
-- Heat_source_Gas: 9.342830
-- Heat_source_Gas/Solar: 3.547675
-- Waterfront: 7.009294
-- Nuisance: -5.658225
-- View: 23.057945
-- Greenbelt: 7.569852
-- Sqft_living_log: 15.177339
-- Water_Lake Sammamish: 137.741862
-- Water_Lake Washington: -22.604616
-- Water_other: 34.141607
+- const: 963.234796
+- bathrooms: 20.254186
+- sqft_lot: 10.414107
+- floors: -7.052045
+- condition: 24.035449
+- grade: 68.459181
+- sqft_above: 74.797094
+- sqft_basement: 23.043827
+- sqft_garage: -4.584058
+- sqft_patio: 8.214320
+- yr_built: -23.544185
+- yr_renovated: 7.226726
+- lat: 88.816082
+- long: 11.343899
+- school_rating: 27.353843
+- sewer_PUBLIC: 6.584108
+- heat_source_Gas: 9.278196
+- heat_source_Gas/Solar: 3.607930
+- waterfront: 6.715330
+- nuisance: -6.073275
+- view: 22.472439
+- greenbelt: 7.161059
+- water_Elliot Bay: -25.286029
+- water_Lake Sammamish: 75.729413
+- water_Lake Washington: -64.398218
+- water_Puget Sound: -16.004882
 
 `- Adjusted rsquared indicates the model explains 62.6% of the data`
 
@@ -483,51 +512,33 @@ The model is used to predict the price of a house, which has been square root tr
 
 Specifically, the interpretation of the coefficients is as follows:
 
-- Bathrooms: A one-unit increase in the number of bathrooms corresponds to an increase in the predicted square root transformed price by 17.832111 standard deviations of the bathrooms variable. This suggests that having more bathrooms is positively associated with a higher predicted price.
+The constant coefficient in a linear regression model represents the expected value of the dependent variable (in this case, the square root of the price) when all the independent variables are equal to zero. Therefore, as the constant coefficient is 963.234796, we would expect the square root of the price to be around 963 when all the independent variables are zero. However, it's important to note that in the context of the model, there may not be any real-world scenarios where all the independent variables are actually zero. The constant term is mainly used as a baseline reference point for the other predictors in the model.
 
-- Sqft_lot: A one-unit increase in the square footage of the lot corresponds to an increase in the predicted price by 10.776486 standard deviations of the sqft_lot variable. This suggests that having a larger lot size is positively associated with a higher predicted price.
-
-- Floors: A one-unit increase in the number of floors corresponds to a decrease in the predicted price by 5.769272 standard deviations of the floors variable. This suggests that having more floors in a house is negatively associated with the predicted price.
-
-- Condition: A one-unit increase in the condition score corresponds to an increase in the predicted square root transformed price by 23.438047 standard deviations of the condition variable. This suggests that having a better condition is positively associated with a higher predicted price.
-
-- Grade: A one-unit increase in the grade score corresponds to an increase in the predicted square root transformed price by 69.763857 standard deviations of the grade variable. This suggests that having a higher grade is positively associated with a higher predicted price.
-
-- Sqft_above: A one-unit increase in the square footage apart from the basement corresponds to an increase in the predicted square root transformed price by 63.905587 standard deviations of the sqft_above variable. This suggests that having a larger living area above ground is positively associated with a higher predicted price.
-
-- Sqft_basement: A one-unit increase in the square footage of the basement corresponds to an increase in the predicted square root transformed price by 17.451898 standard deviations of the sqft_basement variable. This suggests that having a larger basement area is positively associated with a higher predicted price.
-
-- Sqft_garage: A one-unit increase in the square footage of the garage corresponds to a decrease in the predicted price by 3.105150 standard deviations of the sqft_garage variable. This suggests that having a larger garage area is negatively associated with the predicted price.
-
-- Sqft_patio: A one-unit increase in the square footage of the patio corresponds to an increase in the predicted square root transformed price by 7.790561 standard deviations of the sqft_patio variable. This suggests that having a larger patio area is positively associated with a higher predicted price.
-
-- Yr_built: A one-unit increase in the year the house was built corresponds to a decrease in the predicted price by 26.362631 standard deviations of the yr_built variable. This suggests that houses built in more recent years are positively associated with a higher predicted price.
-
-- Yr_renovated: A one-unit increase in the year the house was renovated corresponds to an increase in the predicted square root transformed price by 6.568336 standard deviations of the yr_renovated variable. This suggests that houses that were renovated more recently are positively associated with a higher predicted price.
-
-- Lat: A one-unit increase in the latitude corresponds to an increase in the predicted square root transformed price by 100.368386 standard deviations of the latitude variable. This suggests that houses located at higher latitudes are positively associated with a higher predicted price.
-
-- Long: A one-unit increase in the longitude corresponds to an increase in the predicted square root transformed price by 11.706009 standard deviations of the longitude variable. This suggests that houses located at higher longitudes are positively associated with a higher predicted price.
-
-- Sewer_PUBLIC: A house with public sewer corresponds to an increase in the predicted square root transformed price by 5.427152 standard deviations of the sewer_PUBLIC variable. This suggests that houses connected to public sewer are positively associated with a higher predicted price.
-
-- Heat_source_Gas: A house with a gas heat source corresponds to an increase in the predicted square root transformed price by 9.342830 standard deviations of the heat_source_Gas variable. This suggests that houses with gas heat sources are positively associated with a higher predicted price.
-
-- Heat_source_Gas/Solar: A house with a gas/solar hybrid heat source corresponds to an increase in the predicted square root transformed price by 3.547675 standard deviations of the heat_source_Gas/Solar variable. This suggests that houses with gas/solar hybrid heat sources are positively associated with a higher predicted price.
-
-- Waterfront: A house with a waterfront view corresponds to an increase in the predicted square root transformed price by 7.009294 standard deviations of the waterfront variable. This suggests that houses with waterfront views are positively associated with a higher predicted price.
-
-- Nuisance: A house located near a nuisance corresponds to a decrease in the predicted price by 5.658225 standard deviations of the nuisance variable. This suggests that houses located near nuisances are negatively associated with the predicted price.
-
-- View: A house with a view corresponds to an increase in the predicted square root transformed price by 23.057945 standard deviations of the view variable. This suggests that houses with views are positively associated with a higher predicted price.
-
-- Greenbelt: A house located near a greenbelt corresponds to an increase in the predicted square root transformed price by 7.569852 standard deviations of the greenbelt variable. This suggests that houses located near greenbelts are positively associated with a higher predicted price.
-
-- Sqft_living_log: A one-unit increase in the logarithm of the square footage of the living area corresponds to an increase in the predicted square root transformed price by 15.177339 standard deviations of the sqft_living_log variable. This suggests that having a larger living area is positively associated with a higher predicted price.
-
-- Water_Lake Sammamish: A house located near Lake Sammamish corresponds to an increase in the predicted square root transformed price by 137.741862 standard deviations of the Water_Lake Sammamish variable. This suggests that houses located near Lake Sammamish are strongly positively associated with a higher predicted price.
-
-- Water_Lake Washington: A house located near Lake Washington corresponds to a decrease in the predicted square root transformed price by 22.604616 standard deviations of the Water_Lake Washington variable. This suggests that houses located near Lake Washington are negatively associated with the predicted price.
+- `As the number of bathrooms increases by one standard deviation, the square root price increases by 20.254186.`
+- `As the size of the lot increases by one standard deviation, the square root price increases by 10.414107.`
+- `As the number of floors increases by one standard deviation, the square root price decreases by 7.052045.`
+- `As the condition of the house increases by one standard deviation, the square root price increases by 24.035449.`
+- `As the grade of the house increases by one standard deviation, the square root price increases by 68.459181.`
+- `As the size of the above ground living area increases by one standard deviation, the square root price increases by 74.797094.`
+- `As the size of the basement living area increases by one standard deviation, the square root price increases by 23.043827.`
+- `As the size of the garage increases by one standard deviation, the square root price decreases by 4.584058.`
+- `As the size of the patio increases by one standard deviation, the square root price increases by 8.214320.`
+- `As the age of the house (yr_built) increases by one standard deviation, the square root price decreases by 23.544185.`
+- `As the year of renovation (yr_renovated) increases by one standard deviation, the square root price increases by 7.226726.`
+- `As the latitude of the house increases by one standard deviation, the square root price increases by 88.816082.`
+- `As the longitude of the house increases by one standard deviation, the square root price increases by 11.343899.`
+- `As the school rating increases by one standard deviation, the square root price increases by 27.353843.`
+- `As the house has a public sewer system (sewer_PUBLIC) instead of a private one, the square root price increases by 6.584108.`
+- `As the heat source for the house switches from something other than gas to gas, the square root price increases by 9.278196.`
+- `As the heat source for the house switches from something other than gas/solar to gas/solar, the square root price increases by 3.607930.`
+- `As the house is on a waterfront property, the square root price increases by 6.715330.`
+- `As the house experiences a nuisance (as defined by the model), the square root price decreases by 6.073275.`
+- `As the view from the house improves by one standard deviation, the square root price increases by 22.472439.`
+- `As the house is adjacent to a greenbelt, the square root price increases by 7.161059.`
+- `As the house is located closer to Elliot Bay (in Seattle), the square root price decreases by 25.286029.`
+- `As the house is located closer to Lake Sammamish, the square root price increases by 75.729413.`
+- `As the house is located closer to Lake Washington, the square root price decreases by 64.398218.`
+- `As the house is located closer to Puget Sound, the square root price decreases by 16.004882.`
 
 ## Conclusion
 This entire process included the above described data engineering techniques, as well as an extensive look at transforming variables, feature selection and elimination through trial and error. Different transformations on the price for example were attempted to normalize the distribution, but the decision was made to use the square root transformation as it lended itself to dealing with the upper and lower tails of the distribution of the price more efficiently. 
@@ -572,18 +583,18 @@ Variance Inflation Factors (VIFs) are a measure used to assess the degree of mul
 
 `A positive coefficient indicates that as the corresponding independent variable increases, the square root of the price of the house also increases, while a negative coefficient indicates that as the corresponding independent variable increases, the square root of the price of the house decreases.`
 
-`In this model, we see that the most important variable in predicting the square root of house prices is the latitude of the house, with a coefficient of 100.368386. This suggests that houses located further north tend to have higher prices. The next most important variable is water proximity, with the Water_Lake Sammamish variable having a very high coefficient of 137.741862, suggesting that houses located near this lake tend to have much higher prices than other houses. On the other hand, the Water_Lake Washington variable has a negative coefficient, indicating that houses located near this lake tend to have lower prices than other houses.`
+`In this model, we see that the most important variable in predicting the square root of house prices is the latitude of the house, with a coefficient of 100.368386. This suggests that houses located further north tend to have higher prices. The next most important variable is water proximity, with Water_Lake Sammamish variable having a very high coefficient of 75.729, suggesting that houses located near this lake tend to have much higher prices than other houses. On the other hand, the Water_Lake Washington variable has a negative coefficient, indicating that houses located near this lake tend to have lower prices than other houses.`
 
 `Other important variables include the grade of the house, the square footage of the house above ground, and the condition of the house, all with coefficients greater than 20. The number of bathrooms, square footage of the basement, and the size of the view from the house are also important, with coefficients greater than 15.`
 
-`On the other hand, variables such as the square footage of the garage and the presence of a nuisance nearby have negative coefficients, indicating that houses with larger garages or located near nuisances tend to have lower prices. The year the house was built has a negative coefficient, suggesting that older houses tend to have lower prices. With that, the longitude indicates that houses further West are cheaper as well.`
+`On the other hand, variables such as the square footage of the garage and the presence of a nuisance nearby have negative coefficients, indicating that houses with larger garages or located near nuisances tend to have lower prices. The year the house was built and the longitude of the house also have negative coefficients, suggesting that older houses and houses located further west tend to have lower prices.`
 
 `Overall, these results suggest that there are many factors that contribute to the price of a house, and that location, house size and quality, and the presence of nearby amenities all play important roles in determining the square root of house prices.`
 
 
 ## Recommendations
 
-For the purposes of Zillows ability to choose inventory in the King County Real Estate Market, I recommend looking at properties that are near Lake Sammish or that are further north that also is accompanied with a waterfront. Since the grade, condition, and number of bathrooms appear positively correlated to the price it would make sense to try and buy older homes in the aforementioned areas as older homes tend to be cheaper in terms of price. Taking these homes and ensuring the grade and condition are of high quality through either pre-assessed purchases or renovations, along with possibly adding bathrooms can raise the price for resell value. 
+For the purposes of Zillows ability to choose inventory in the King County Real Estate Market, I recommend looking at properties that are near Lake Sammish or that are further north that also is accompanied with a waterfront. Since the grade, condition, and number of bathrooms appear positively correlated to the price it would make sense to try and buy older homes in the aforementioned areas as older homes tend to be cheaper in terms of price. Taking these homes and ensuring the grade and condition are of high quality through either pre-assessed purchases or renovations, along with possibly adding bathrooms can raise the price for resell value. Picking houses near school districts of high rating can have an impact as well. 
 
 Houses towards the west as well as ones that present nuisances clearly result in lower prices, so my recommendation would be to avoid buying houses that fit these parameters as it may result in "holding the bag" scenarios which could lead to longer times held with inventory. 
 
@@ -598,6 +609,7 @@ The only invalid metric that should probably be ignored for now(but explored fur
 - `What level of renovations need to be performed on the houses, and when?`
 - `Will the house price be affected by common nuisances? (eg. noise, construction, bugs)`
 - `How far west should the house be before one should lose interest of the purchase?`
+- `What average quality of schools in the surrounding area?`
 
 ## Future Work
 
