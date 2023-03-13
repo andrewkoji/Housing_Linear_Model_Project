@@ -235,8 +235,9 @@ Additional Observations:
   3 standard deviations outside the mean
 ### Goals
     - improve skewness
-    - reduce homoscedacity
+    - reduce heteroscedacity - ensure model is homoscedastic
     - increase rsquared to promote higher level explanation of data from model
+    - remove multicollinearity
 
 ## Possible categorical variables of interest: 
 
