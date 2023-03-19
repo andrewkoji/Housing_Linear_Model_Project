@@ -443,7 +443,8 @@ Next steps to improve the model:
 ![image.png](./images/residdist_model_3_log_scaled.png)
 
 #### Checking VIFs
-![image-3.png](./images/scaledvifs.png)
+![image-3.png](./images/scaledvifs_.png)
+
 - VIFs for many variables are still elevated and need to be dropped from model if that remains in the final model. 
 
 ## Final model
