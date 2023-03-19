@@ -179,7 +179,7 @@ It appears at first glance that the data only yields a small set of independent 
 ![image.png](./images/scatterplots.png)
 
 # Model #1 - numerical predictors only, some categorical
-![image-2.png](./images/OLS_Model_1.png)
+![image-2.png](./images/OLS_Model_1_.png)
 
 
 Predictors:
@@ -221,7 +221,7 @@ p_value > 0.05
  
  
 Additional Observations:
- - The adjusted r-squared value is .514, indicating that his model can explain approximately 51.4% of the data.
+ - The adjusted r-squared value is .528, indicating that his model can explain approximately 52.8% of the data.
  -  Skew: A kurtosis value between -2 and +2 is good to prove normalcy. The skew value is 10.060, indicating that this model is heavily skewed. This will be addressed through transformations to normalize the data. 
 
 ![image.png](./images/model1residhist.png)
@@ -266,7 +266,7 @@ Waterfont, greenbelt, nuisance, view, sewer(onehotencoded), and heat source(oneh
 - `waterfront, view, greenbelt`: changed to booleans or scaled as 1-4 depending on number of options
 - `sewer, heatsource`: one hot encoded to be added as numerical variable
 
-![image-2.png](./images/OLS_Model_2.png)
+![image-2.png](./images/OLS_Model_2_.png)
 
 ## Observations of Model 2
 Predictors:
@@ -324,16 +324,16 @@ Next steps are to improve numerical variables by:
 
 ## Model #3 - Ran after outliers are removed
 
-![image.png](./images/OLS_Model_3.png)
+![image.png](./images/OLS_Model_3_.png)
 
-![image.png](./images/model3residafteroutliersremoved.png)
+![image.png](./images/residdist_model_3.png)
 
 #### Predictors
 
 - `bedrooms`
 - `bathrooms` 
 - `sqft_living` 
-- `sqft_lot 
+- `sqft_lot` 
 - `floors`
 - `condition` 
 - `grade` 
@@ -344,7 +344,8 @@ Next steps are to improve numerical variables by:
 - `yr_built` 
 - `yr_renovated` 
 - `lat` 
-- `long` 
+- `long`
+- `school_rating`
 - `month`
 - `day_of_year` 
 - `sewer_PRIVATE RESTRICTED` 
@@ -364,6 +365,7 @@ Next steps are to improve numerical variables by:
 ## Observations of model 3
 pvalue > 0.05
 - `sqft_basement` 
+- `sqft_garage`
 - `sewer_PRIVATE RESTRICTED`
 - `sewer_PUBLIC RESTRICTED`
 - `heat_source_Electricity/Solar`
@@ -372,7 +374,7 @@ pvalue > 0.05
 
 
 
-- Adjusted rsquared indicates that the model explains 63.3% of the data.
+- Adjusted rsquared indicates that the model explains 66.7% of the data.
 - Skewness has improved dramatically to an acceptable range between -2 and 2. The removal of outliers has made this possible.
 - Durbin-Watson score is still in the acceptable ranges of 1.5-2.5
 - Jarque-Bera score is still very high but has been brought down by a significant factor. Still not perfect but trending in the right direction.
@@ -380,24 +382,14 @@ pvalue > 0.05
 
 # Looking at transformations for the target variable aka price.
 
-## Histogram and QQplot of the target variable
-![image.png](./images/histQQprice.png)
 
-### Issue above is the data shows linearization everywhere but both tails of the data. Catching the lower tail will be the goal for the test of transformation. For this, we will try a root transformation. 
-
-
-## Histogram and QQplot of the transformed target variable
-![image-2.png](./images/histqqsqrtprice.png)
-
-
-
-![image-3.png](./images/TVtransformations.png)
+![image-3.png](./images/TVlogtransformations.png)
 
 ### Checking model with transformed target variable - square root transformation
-![image.png](./images/OLS_Model_sqrt.png)
+![image.png](./images/OLS_Model_3_log_trans.png)
 
 
-![image-2.png](./images/model3residsqrtprice.png)
+![image-2.png](./images/residdist_model_log.png)
 
 ## y_log vs y_sqrt
 
@@ -416,10 +408,10 @@ Jarque-Beras score is significantly better as well with the y_sqrt variable so I
 
 ## Model ran one more time - after dropping bedrooms, and all onehotencoded variables with pval > 0,05
 
-![image-4.png](./images/OLS_Model_3_after_dropped_variables.png)
+![image-4.png](./images/OLS_Model_3_log_pvals_dropped.png)
 
 ### Residual distribution
-![image-5.png](./images/residonemore.png)
+![image-5.png](./images/residdist_model_3_log_dropped.png)
 
 
 ## Observations
@@ -445,26 +437,26 @@ Next steps to improve the model:
 
 ## Rerunning model after scaling
 
-![image.png](./images/OLS_Model_Scaled.png)
+![image.png](./images/OLS_Model_3_log_scaled.png)
 
 ### Residual Distribution Plot 
-![image.png](./images/residualnobedrooms.png)
+![image.png](./images/residdist_model_3_log_scaled.png)
 
 #### Checking VIFs
-![image-3.png](./images/scaledVIFs.png)
+![image-3.png](./images/scaledvifs.png)
 - VIFs for many variables are still elevated and need to be dropped from model if that remains in the final model. 
 
 ## Final model
 
 #### Model is ran after adding the waterfront data (one hot encoded) as well as dropping any additional variables that are of a pvalue > 0.05
 
-![image.png](./images/final_model.png)
+![image.png](./images/final_OLS_model.png)
 ### Residual Distribution Plot 
 
-![image-2.png](./images/finalresid.png)
+![image-2.png](./images/final_resid.png)
 
 ### Final Check on VIFs for multicollinearity
-![image-3.png](./images/final_vifs.png)
+![image-3.png](./images/final_VIFs_.png)
 
 - All VIFs are under 3 but one, addressing the issue of multicollinearity. The statsmodel also does not label any concerns on multicollinearity.
 
@@ -472,79 +464,100 @@ Next steps to improve the model:
 
 As shown below, the QQplots of all the variables satisfies linearity which is one of the required assumptions for the model, with some issues at the upper and lower tail for some. 
 
-![image.png](./images/final_QQplot.png)
+![image.png](./images/final_QQplots.png)
 
 ### Interpretation
 
-We have a linear model with the dependent variable (price) square root transformed, and the following independent variables and their corresponding coefficients:
+We have a linear model with the dependent variable (price) log transformed, and the following independent variables and their corresponding coefficients:
 
-- const: 963.234796
-- bathrooms: 20.254186
-- sqft_lot: 10.414107
-- floors: -7.052045
-- condition: 24.035449
-- grade: 68.459181
-- sqft_above: 74.797094
-- sqft_basement: 23.043827
-- sqft_garage: -4.584058
-- sqft_patio: 8.214320
-- yr_built: -23.544185
-- yr_renovated: 7.226726
-- lat: 88.816082
-- long: 11.343899
-- school_rating: 27.353843
-- sewer_PUBLIC: 6.584108
-- heat_source_Gas: 9.278196
-- heat_source_Gas/Solar: 3.607930
-- waterfront: 6.715330
-- nuisance: -6.073275
-- view: 22.472439
-- greenbelt: 7.161059
-- water_Elliot Bay: -25.286029
-- water_Lake Sammamish: 75.729413
-- water_Lake Washington: -64.398218
-- water_Puget Sound: -16.004882
+- `const                    13.736608`
+- `bathrooms                 0.044602`
+- `sqft_lot                  0.028880`
+- `floors                   -0.019251`
+- `condition                 0.036807`
+- `grade                     0.130172`
+- `sqft_basement             0.040365`
+- `sqft_patio                0.015128`
+- `yr_built                 -0.050884`
+- `yr_renovated              0.012325`
+- `lat                       0.166207`
+- `long                      0.006676`
+- `school_rating             0.085132`
+- `sewer_PUBLIC              0.012971`
+- `heat_source_Gas           0.014910`
+- `heat_source_Gas/Solar     0.007111`
+- `waterfront                0.018251`
+- `nuisance                 -0.009396`
+- `view                      0.045831`
+- `greenbelt                 0.009246`
+- `sqft_above_log            0.146602`
+- `water_Lake Sammamish      0.090771`
+- `water_Lake Washington    -0.135775`
+- `water_Puget Sound        -0.039698`
 
-`- Adjusted rsquared indicates the model explains 62.6% of the data`
+`- Adjusted rsquared indicates the model explains 70.1% of the data`
 
-The linear regression model with a dependent variable that has been square root transformed and scaled, along with independent variables that have been scaled as z-scores, can be interpreted as follows:
+The linear regression model with a dependent variable that has been log transformed and scaled, along with independent variables that have been scaled as z-scores, can be interpreted as follows:
 
-The model is used to predict the price of a house, which has been square root transformed, based on the values of several independent variables. Each independent variable has been standardized to a z-score, so the coefficients represent the change in the dependent variable (price) for a one standard deviation increase in the independent variable.
+The model is used to predict the price of a house, which has been log transformed, based on the values of several independent variables. Each independent variable has been standardized to a z-score, so the coefficients represent the change in the dependent variable (price) for a one standard deviation increase in the independent variable.
 
-Specifically, the interpretation of the coefficients is as follows:
+The calculations for interpretation were just to take the absolute value and order by highest coefficients. A dataframe of the 'params' for intepretation was developed as seen below:
+![image.png](./images/params_df.png)
 
-The constant coefficient in a linear regression model represents the expected value of the dependent variable (in this case, the square root of the price) when all the independent variables are equal to zero. Therefore, as the constant coefficient is 963.234796, we would expect the square root of the price to be around 963 when all the independent variables are zero. However, it's important to note that in the context of the model, there may not be any real-world scenarios where all the independent variables are actually zero. The constant term is mainly used as a baseline reference point for the other predictors in the model.
+These parameters were multiplied by 100 to express as percentages. The explanations are as follows:
+- As lat increases by 1 standard deviation, the price of a home increases by 16.62%
 
-- `As the number of bathrooms increases by one standard deviation, the square root price increases by 20.254186.`
-- `As the size of the lot increases by one standard deviation, the square root price increases by 10.414107.`
-- `As the number of floors increases by one standard deviation, the square root price decreases by 7.052045.`
-- `As the condition of the house increases by one standard deviation, the square root price increases by 24.035449.`
-- `As the grade of the house increases by one standard deviation, the square root price increases by 68.459181.`
-- `As the size of the above ground living area increases by one standard deviation, the square root price increases by 74.797094.`
-- `As the size of the basement living area increases by one standard deviation, the square root price increases by 23.043827.`
-- `As the size of the garage increases by one standard deviation, the square root price decreases by 4.584058.`
-- `As the size of the patio increases by one standard deviation, the square root price increases by 8.214320.`
-- `As the age of the house (yr_built) increases by one standard deviation, the square root price decreases by 23.544185.`
-- `As the year of renovation (yr_renovated) increases by one standard deviation, the square root price increases by 7.226726.`
-- `As the latitude of the house increases by one standard deviation, the square root price increases by 88.816082.`
-- `As the longitude of the house increases by one standard deviation, the square root price increases by 11.343899.`
-- `As the school rating increases by one standard deviation, the square root price increases by 27.353843.`
-- `As the house has a public sewer system (sewer_PUBLIC) instead of a private one, the square root price increases by 6.584108.`
-- `As the heat source for the house switches from something other than gas to gas, the square root price increases by 9.278196.`
-- `As the heat source for the house switches from something other than gas/solar to gas/solar, the square root price increases by 3.607930.`
-- `As the house is on a waterfront property, the square root price increases by 6.715330.`
-- `As the house experiences a nuisance (as defined by the model), the square root price decreases by 6.073275.`
-- `As the view from the house improves by one standard deviation, the square root price increases by 22.472439.`
-- `As the house is adjacent to a greenbelt, the square root price increases by 7.161059.`
-- `As the house is located closer to Elliot Bay (in Seattle), the square root price decreases by 25.286029.`
-- `As the house is located closer to Lake Sammamish, the square root price increases by 75.729413.`
-- `As the house is located closer to Lake Washington, the square root price decreases by 64.398218.`
-- `As the house is located closer to Puget Sound, the square root price decreases by 16.004882.`
+- As sqft_above_log increases by 1 standard deviation, the price of a home increases by 14.66%
+
+- As water_Lake Washington increases by 1 standard deviation, the price of a home decreases by 13.58%
+
+- As grade increases by 1 standard deviation, the price of a home increases by 13.02%
+
+- As water_Lake Sammamish increases by 1 standard deviation, the price of a home increases by 9.08%
+
+- As school_rating increases by 1 standard deviation, the price of a home increases by 8.51%
+
+- As yr_built increases by 1 standard deviation, the price of a home decreases by 5.09%
+
+- As view increases by 1 standard deviation, the price of a home increases by 4.58%
+
+- As bathrooms increases by 1 standard deviation, the price of a home increases by 4.46%
+
+- As sqft_basement increases by 1 standard deviation, the price of a home increases by 4.04%
+
+- As water_Puget Sound increases by 1 standard deviation, the price of a home decreases by 3.97%
+
+- As condition increases by 1 standard deviation, the price of a home increases by 3.68%
+
+- As sqft_lot increases by 1 standard deviation, the price of a home increases by 2.89%
+
+- As floors increases by 1 standard deviation, the price of a home decreases by 1.93%
+
+- As waterfront increases by 1 standard deviation, the price of a home increases by 1.83%
+
+- As sqft_patio increases by 1 standard deviation, the price of a home increases by 1.51%
+
+- As heat_source_Gas increases by 1 standard deviation, the price of a home increases by 1.49%
+
+- As sewer_PUBLIC increases by 1 standard deviation, the price of a home increases by 1.3%
+
+- As yr_renovated increases by 1 standard deviation, the price of a home increases by 1.23%
+
+- As nuisance increases by 1 standard deviation, the price of a home decreases by 0.94%
+
+- As greenbelt increases by 1 standard deviation, the price of a home increases by 0.92%
+
+- As heat_source_Gas/Solar increases by 1 standard deviation, the price of a home increases by 0.71%
+
+- As long increases by 1 standard deviation, the price of a home increases by 0.67%
+
 
 ## Conclusion
 This entire process included the above described data engineering techniques, as well as an extensive look at transforming variables, feature selection and elimination through trial and error. Different transformations on the price for example were attempted to normalize the distribution, but the decision was made to use the square root transformation as it lended itself to dealing with the upper and lower tails of the distribution of the price more efficiently. 
 
 The rest of the data cleaning process also included dropping or filling in of missing values, removal of outliers, one hot encoding categorical variables as well as dropping all variables that presented themselves with a high variance inflation factor. The use of QQplots and histograms were used to check the distribution of residuals. 
+
+
 
 
 ## Four assumptions
@@ -575,27 +588,36 @@ Variance Inflation Factors (VIFs) are a measure used to assess the degree of mul
 - The Durbin-Watson score is almost exactly 2, satisfying the assumption of homoscedasticity. 
 - The linearity assumption was satisfied through a rigorous look at the plots and in general can be a difficult metric to validate. 
 - The skew level of the data is well within the acceptable range of -2 to 2 which is a vast improvement from the original model which was originally above 10. 
-- The kurtosis level is outside the acceptable range of -7 to 7 at a score of ~8.5, but however is still a major improvement from the original model. This is one that should be looked at later. 
-- The Jarque Beras score is a massive 35770 which will require further investigation for future work. My instincts tell me there still may be some major outliers that may be affecting this score as the QQplots appear to be for the most part okay. 
+- The kurtosis level is inside the acceptable range of -7 to 7 at a score of ~6.
+
+- The Jarque Beras score is a massive 10720 which will require further investigation for future work. My instincts tell me there still may be some major outliers that may be affecting this score as the QQplots appear to be for the most part okay. 
+- The assumption of no multicollinearity is satisfied due to the VIFs all remaining under 3 and the OLS model shows no signs as well. 
 
 
 
 ## Conclusion
 
-`A positive coefficient indicates that as the corresponding independent variable increases, the square root of the price of the house also increases, while a negative coefficient indicates that as the corresponding independent variable increases, the square root of the price of the house decreases.`
+The results suggest that the most influential predictors on home price are:
 
-`In this model, we see that the most important variable in predicting the square root of house prices is the latitude of the house, with a coefficient of 100.368386. This suggests that houses located further north tend to have higher prices. The next most important variable is water proximity, with Water_Lake Sammamish variable having a very high coefficient of 75.729, suggesting that houses located near this lake tend to have much higher prices than other houses. On the other hand, the Water_Lake Washington variable has a negative coefficient, indicating that houses located near this lake tend to have lower prices than other houses.`
+`Latitude (lat)`: As latitude increases by 1 standard deviation, the price of a home increases by 16.62%.
+`Grade`: As grade increases by 1 standard deviation, the price of a home increases by 13.02%.
+`Square footage of aside from basement (sqft_above_log)`: As sqft_above_log increases by 1 standard deviation, the price of a home increases by 14.66%.
+Other predictors that have a significant effect on home price include:
 
-`Other important variables include the grade of the house, the square footage of the house above ground, and the condition of the house, all with coefficients greater than 20. The number of bathrooms, square footage of the basement, and the size of the view from the house are also important, with coefficients greater than 15.`
-
-`On the other hand, variables such as the square footage of the garage and the presence of a nuisance nearby have negative coefficients, indicating that houses with larger garages or located near nuisances tend to have lower prices. The year the house was built and the longitude of the house also have negative coefficients, suggesting that older houses and houses located further west tend to have lower prices.`
-
-`Overall, these results suggest that there are many factors that contribute to the price of a house, and that location, house size and quality, and the presence of nearby amenities all play important roles in determining the square root of house prices.`
+`Water features`: Lake Sammamish increases home price by 9.08%, while Lake Washington decreases it by 13.58% and Puget Sound decreases it by 3.97%.
+`School rating`: As school rating increases by 1 standard deviation, the price of a home increases by 8.51%.
+`Bathrooms`: As the number of bathrooms increases by 1 standard deviation, the price of a home increases by 4.46%.
+`View`: As the view score increases by 1 standard deviation, the price of a home increases by 4.58%.
+`Square footage of basement area (sqft_basement)`: As sqft_basement increases by 1 standard deviation, the price of a home increases by 4.04%.
+`Condition`: As condition increases by 1 standard deviation, the price of a home increases by 3.68%.
+`Square footage of the lot (sqft_lot)`: As sqft_lot increases by 1 standard deviation, the price of a home increases by 2.89%.
+`Longitude (long)`: As `longitude` increases by 1 standard deviation, the price of a home increases by .67%.
+Some predictors have a smaller effect on home price, such as `waterfront` increasing the price by 1.83%, while `floors` decreasing it by 1.93%.
 
 
 ## Recommendations
 
-For the purposes of Zillows ability to choose inventory in the King County Real Estate Market, I recommend looking at properties that are near Lake Sammish or that are further north that also is accompanied with a waterfront. Since the grade, condition, and number of bathrooms appear positively correlated to the price it would make sense to try and buy older homes in the aforementioned areas as older homes tend to be cheaper in terms of price. Taking these homes and ensuring the grade and condition are of high quality through either pre-assessed purchases or renovations, along with possibly adding bathrooms can raise the price for resell value. Picking houses near school districts of high rating can have an impact as well. 
+For the purposes of Zillows ability to choose inventory in the King County Real Estate Market, I recommend looking at properties that are near Lake Samammish or that are further north that also is accompanied with a waterfront. Since the grade, condition, and number of bathrooms appear positively correlated to the price it would make sense to try and buy older homes in the aforementioned areas as older homes tend to be cheaper in terms of price. Taking these homes and ensuring the grade and condition are of high quality through either pre-assessed purchases or renovations, along with possibly adding bathrooms can raise the price for resell value. Picking houses near school districts of high rating can have an impact as well. 
 
 Houses towards the west as well as ones that present nuisances clearly result in lower prices, so my recommendation would be to avoid buying houses that fit these parameters as it may result in "holding the bag" scenarios which could lead to longer times held with inventory. 
 
@@ -622,8 +644,3 @@ Jarque Beras score and outliers of the dataset should be further explored. The u
 
 Any independent variables that presented with a Variance Inflation factor above 5 should be looked at again to see if multicollinearity is an issue with these particular variables. 
 
-
-
-```python
-
-```
