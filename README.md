@@ -9,21 +9,36 @@ Please fill out:
 - Instructor name: Ahbhineet Kukarni
 - Blog post URL:
 
+## Repository Structure
+```
+├───data
+├───images
+│   
+├───notebooks
+│   
+└───PDFs
+```
+
+This is repository we have all of our relevant files that will contain our business understanding, data analysis, and deliverables. The deliverables will be the notebook as well as the presentation. You can find the notebook by [here](https://github.com/andrewkoji/Housing_Linear_Model_Project/blob/main/PDFs/presentation.pdf) as well as the presentation by clicking [here](https://github.com/andrewkoji/Housing_Linear_Model_Project/blob/main/PDFs/notebook.pdf). 
+
 ## Business Problem:
 # Stakeholder: Real Estate Agency - Zillow
 
 ![Zillow_logo19.png](./images/zillow.png)
 
-# Problem: 
-Business problem - Provide advice to homeowners about how home renovations might increase the estimated value of their homes, and by what amount.
+# I. Business Understanding:
+
+## Business problem 
+### Stakeholder: Real Estate Agency - Zillow
+### Problem: Provide advice to homeowners about how home renovations might increase the estimated value of their homes, and by what amount.
 
 ### How problem will be approached
-
 This problem will be approached using information from a built in linear regression model. The model will be built using both numerical and categorical data to provide what features may help to increase the price of peoples homes. Numerical data will be explored and categorical data will be added after in an attempt to improve the model.
 
-### Description of the Data:
-King County House Sales dataset
-columns can be referred to in readme.
+# II. Data Understanding:
+
+### Data Set
+The dataset that will be used for this study is the **Kings County Dataset**. You can find a link to the dataset by clicking on this link to the [dataset](https://info.kingcounty.gov/assessor/DataDownload/default.aspx)
 
 ### Target variable
 * `price` - Sale price (prediction target)
